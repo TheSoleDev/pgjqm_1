@@ -1,83 +1,87 @@
 $(function(){
+
     $window = $('.window'),
     $bird = $('.bird'),
-  fallTime = 1000,
-  gapHeight = 120,
-  gameState = 2,
-  pipeId = 0;
+    fallTime = 1000,
+    gapHeight = 120,
+    gameState = 2,
+    pipeId = 0;
 
     var int = setInterval(function(){
-    if(gameState === 1){
-      spawnPipe();
-      movePipes();
-    }
-  }, 1300);
-  
-  var birdPosInterval = setInterval(function(){ 
-    if(gameState === 1){
-      birdPos();
-    }
-  }, 10);
+        if(gameState === 1){
+          spawnPipe();
+          movePipes();
+        }
+    }, 1300);
+
+    var birdPosInterval = setInterval(function(){ 
+        if(gameState === 1){
+          birdPos();
+        }
+    }, 10);
 
     $window.mousedown(function(){
         birdFlap();
-    if(gameState === 2){
-      gameState = 1;
-      deleteInterval();
-    }
+        if(gameState === 2){
+          gameState = 1;
+          deleteInterval();
+        }
     });
-  
+
     $(window).keydown(function(e){
         if(e.keyCode === 32){
             birdFlap();
-      e.preventDefault();
-      if(gameState === 2){
-        gameState = 1;
-        deleteInterval();
-      }
+            e.preventDefault();
+            if(gameState === 2){
+                gameState = 1;
+                deleteInterval();
+            }
         }
     });
 
-  function deleteInterval(){
-      setTimeout(function(){
-          var int= setInterval(function(){ 
-        if(gameState === 1){
-          deletePipe();
-        }
-      }, 1300);
-      }, 2050);
-  }
+    function deleteInterval(){
+
+        setTimeout(function(){
+            var int= setInterval(function(){ 
+                if(gameState === 1){
+                  deletePipe();
+                }
+            }, 1300);
+        }, 2050);
+
+    }
   
     function birdFlap(){
-    if(gameState === 1 || gameState === 2){
-      // $bird.css('transform', 'rotate(-20deg)');
-          $bird.stop().animate({
-              bottom: '+=60px'
-        }, 200, function(){
-        birdPos();
-        // $bird.css('transform', 'rotate(0deg)');
+
+        if(gameState === 1 || gameState === 2){
+            // $bird.css('transform', 'rotate(-20deg)');
             $bird.stop().animate({
-                bottom: '-=60px'
-          }, 300, 'linear', function(){
-          birdPos();
-          gravity();
-        });
-        });
-    }
+                  bottom: '+=60px'
+            }, 200, function(){
+                birdPos();
+                // $bird.css('transform', 'rotate(0deg)');
+                $bird.stop().animate({
+                        bottom: '-=60px'
+                      }, 300, 'linear', function(){
+                      birdPos();
+                      gravity();
+                    });
+            });
+        }
     }
 
     function gravity(){
-    birdPercent = parseInt($bird.css('bottom')) / $window.height();
-    totalFallTime = fallTime * birdPercent;
+        birdPercent = parseInt($bird.css('bottom')) / $window.height();
+        totalFallTime = fallTime * birdPercent;
         $bird.stop().animate({
             bottom: '0'
         }, totalFallTime, 'linear');
 
-    $bird.css('transform', 'rotate(90deg)');
+        $bird.css('transform', 'rotate(90deg)');
     }
 
     function spawnPipe(){
-    pipeId++;
+        pipeId++;
         pipeTopHeight = Math.floor(Math.random() * ($window.height() - 250)) + 50;
         pipeBottomHeight = $window.height() - (pipeTopHeight + gapHeight);
         pipe = '<div class="pipe" pipe-id="' + pipeId + '"><div style="height: ' + pipeTopHeight + 'px" class="topHalf"></div><div style="height:' + pipeBottomHeight + 'px" class="bottomHalf"></div></div>';
@@ -121,4 +125,5 @@ $(function(){
     gravity();
     gameState = 0;
   }
+
 })
